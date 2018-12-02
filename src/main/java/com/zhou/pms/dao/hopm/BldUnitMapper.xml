@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhou.pms.dao.hopm.BldUnitMapper">
+
+	<resultMap type="BldUnit" id="BldUnitMap">
+		<id property="unitId" column="unit_id"/>
+		<result property="unitName" column="unit_name"/>
+	</resultMap>
+    
+  <!-- 通过楼宇 id查所有单元信息 -->
+  <select id="getAllUnitByBldId" resultMap="BldUnitMap">
+  	select * from tb_building_unit
+	where bld_id = #{bldId};
+  </select>
+</mapper>
+
+

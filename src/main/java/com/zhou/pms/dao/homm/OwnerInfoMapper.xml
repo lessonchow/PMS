@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhou.pms.dao.homm.OwnerInfoMapper">
+
+	<!-- 业主信息的resultMap -->
+	<resultMap type="OwnerInfo" id="OwenerInfoMap">
+	 	<id property="ownerId" column="owner_id"/>
+	 	<result property="ldcId" column="ldc_id"/>
+	 	<result property="ownerType" column="owner_type"/>
+	 	<result property="ownerCode" column="owner_code"/>
+	 	<result property="ownerName" column="owner_name"/>
+	 	<result property="ownerGender" column="owner_gender"/>
+	 	<result property="ownerBirthday" column="owner_birthday"/>
+	 	<result property="ownerRace" column="owner_race"/>
+	 	<result property="ownerEducation" column="owner_education"/>
+	 	<result property="ownerCountry" column="owner_country"/>
+	 	<result property="ownerHometown" column="owner_hometown"/>
+	 	<result property="ownerCertType" column="owner_cert_type"/>
+	 	<result property="ownerCertNo" column="owner_cert_no"/>
+	 	<result property="ownerWork" column="owner_work"/>
+	 	<result property="ownerWorkPosition" column="owner_work_position"/>
+	 	<result property="ownerMobile" column="owner_mobile"/>
+	 	<result property="ownerZipcode" column="owner_zipcode"/>
+	 	<result property="ownerAdd" column="owner_add"/>
+	 	<result property="ownerUrgentcontact" column="owner_urgentcontact"/>
+	 	<result property="ownerUrgentcontactPhone" column="owner_urgentcontact_phone"/>
+	 	<result property="ownerUrgentcontactAdd" column="owner_urgentcontact_add"/>
+	 	<result property="ownerBank" column="owner_bank"/>
+	 	<result property="ownerBankaccount" column="owner_bankaccount"/>
+	 	<result property="ownerPolice" column="owner_police"/>
+	 	<result property="ownerStatus" column="owner_status"/>
+	 	<result property="ownerRemark" column="owner_remark"/>
+	 	<result property="ownerPicname" column="owner_picname"/>
+	 	
+	 	<result property="ldcName" column="ldc_name"/>
+	 	
+	 	<!-- <association property="company" javaType="com.bdqn.pms.po.hopm.Company" resultMap=""/> -->
+	 	<!-- <collection property="fmList" ofType="FamilyMembers" resultMap="FamilyMembersMap"/>
+	 	<collection property="estList" ofType="Estates" resultMap="EstatesMap"/> -->
+  	</resultMap>
+ 	
+  	
+	<!-- 获得全部业主信息的记录数或获取特定条件的记录数-->
+	<select id="getOwnerInfoCount" resultType="long">
+	 	select count(1) from 
+	 	tb_homm_ownerinfo
+	 	<where>
+			<if test="ownerId != null and ownerId !=''"> 
+				and `owner_id` = #{ownerId}
+			</if>
+			<if test="ownerCode != null and ownerCode !=''">
+				and owner_code like CONCAT('%', #{ownerCode}, '%')
+			</if>
+			<if test="ownerName != null and ownerName !=''">
+				and owner_name like CONCAT('%', #{ownerName}, '%')
+			</if>
+			<if test="ownerCertNo != null and ownerCertNo !=''">
+				and owner_cert_no like CONCAT('%', #{ownerCertNo}, '%')
+			</if>
+			<if test="ownerWork != null and ownerWork !=''">
+				and owner_work like CONCAT('%', #{ownerWork}, '%')
+			</if>
+			<if test="ownerMobile != null and ownerMobile !=''">
+				and owner_mobile like CONCAT('%', #{ownerMobile}, '%')
+			</if>
+			<if test="ownerAdd != null and ownerAdd !=''">
+				and owner_add like CONCAT('%', #{ownerAdd}, '%')
+			</if>
+			<if test="ownerBankaccount != null and ownerBankaccount !=''">
+				and owner_bankaccount like CONCAT('%', #{ownerBankaccount}, '%')
+			</if>
+			<if test="ownerUrgentcontact != null and ownerUrgentcontact !=''">
+				and owner_urgentcontact like CONCAT('%', #{ownerUrgentcontact}, '%')
+			</if>
+			<if test="ownerRemark != null and ownerRemark !=''">
+				and owner_remark like CONCAT('%', #{ownerRemark}, '%')
+			</if>
+			<if test="ownerType != null and ownerType !=''">
+				and `owner_type` = #{ownerType}
+			</if>
+		</where>
+	</select>
+
+  
+  <!-- 分页获取全部业主信息或通过条件获取业主信息（信息条数达到一定数量才需要分页） -->
+  <select id="getOwnerInfoList" resultMap="OwenerInfoMap" >
+  	SELECT o.*, c.ldc_name FROM 
+	tb_homm_ownerinfo AS o, tb_company AS c
+	<where>
+		o.`ldc_id` = c.`ldc_id`
+		<if test="ownerInfo.ownerId != null and ownerInfo.ownerId !=''"> 
+			and o.`owner_id` = #{ownerInfo.ownerId}
+		</if>
+		<if test="ownerInfo.ownerCode != null and ownerInfo.ownerCode !=''">
+			and o.owner_code like CONCAT('%', #{ownerInfo.ownerCode}, '%')
+		</if>
+		<if test="ownerInfo.ownerName != null and ownerInfo.ownerName !=''">
+			and o.owner_name like CONCAT('%', #{ownerInfo.ownerName}, '%')
+		</if>
+		<if test="ownerInfo.ownerCertNo != null and ownerInfo.ownerCertNo !=''">
+			and o.owner_cert_no like CONCAT('%', #{ownerInfo.ownerCertNo}, '%')
+		</if>
+		<if test="ownerInfo.ownerWork != null and ownerInfo.ownerWork !=''">
+			and o.owner_work like CONCAT('%', #{ownerInfo.ownerWork}, '%')
+		</if>
+		<if test="ownerInfo.ownerMobile != null and ownerInfo.ownerMobile !=''">
+			and o.owner_mobile like CONCAT('%', #{ownerInfo.ownerMobile}, '%')
+		</if>
+		<if test="ownerInfo.ownerAdd != null and ownerInfo.ownerAdd !=''">
+			and o.owner_add like CONCAT('%', #{ownerInfo.ownerAdd}, '%')
+		</if>
+		<if test="ownerInfo.ownerBankaccount != null and ownerInfo.ownerBankaccount !=''">
+			and o.owner_bankaccount like CONCAT('%', #{ownerInfo.ownerBankaccount}, '%')
+		</if>
+		<if test="ownerInfo.ownerUrgentcontact != null and ownerInfo.ownerUrgentcontact !=''">
+			and o.owner_urgentcontact like CONCAT('%', #{ownerInfo.ownerUrgentcontact}, '%')
+		</if>
+		<if test="ownerInfo.ownerRemark != null and ownerInfo.ownerRemark !=''">
+			and o.owner_remark like CONCAT('%', #{ownerInfo.ownerRemark}, '%')
+		</if>
+		<if test="ownerInfo.ownerType != null and ownerInfo.ownerType !=''">
+			and o.`owner_type` = #{ownerInfo.ownerType}
+		</if>
+	</where>
+		ORDER BY owner_code
+		LIMIT #{pageUtils.startrow} , #{pageUtils.pagesize}
+  </select>
+  
+  <!-- 通过业主编号ownerCode获取某个业主的信息 -->
+  <select id="getOwnerInfobyOwnerCode" resultMap="OwenerInfoMap" >
+  	SELECT * FROM tb_homm_ownerinfo
+	where owner_code = #{ownerCode}
+  </select>
+  
+  <!-- 更新相应业主的信息-->
+  <update id="updateOwnerInfo" parameterType="OwnerInfo">
+	  	update tb_homm_ownerinfo set ldc_id=#{ldcId},owner_type=#{ownerType},owner_code=#{ownerCode},owner_name=#{ownerName},owner_gender=#{ownerGender},
+	  	owner_birthday=#{ownerBirthday},owner_race=#{ownerRace},owner_education=#{ownerEducation},owner_country=#{ownerCountry},owner_hometown=#{ownerHometown},
+	  	owner_cert_type=#{ownerCertType},owner_cert_no=#{ownerCertNo},owner_work=#{ownerWork},owner_work_position=#{ownerWorkPosition},owner_mobile=#{ownerMobile},
+	  	owner_zipcode=#{ownerZipcode},owner_add=#{ownerAdd},owner_urgentcontact=#{ownerUrgentcontact},owner_urgentcontact_phone=#{ownerUrgentcontactPhone},
+	  	owner_urgentcontact_add=#{ownerUrgentcontactAdd},owner_bank=#{ownerBank},owner_bankaccount=#{ownerBankaccount},owner_police=#{ownerPolice},
+	  	owner_status=#{ownerStatus},owner_remark=#{ownerRemark},owner_picname=#{ownerPicname} where owner_id=#{ownerId};
+  </update>  
+  
+  <!-- 根据id删除具体的业主信息 -->
+  <delete id="deleteOwnerInfoById">
+  		delete from tb_homm_ownerinfo 
+  		where owner_id=#{id}
+  </delete>
+  
+  <!-- 清除某个业主的照片 -->
+  <update id="clearOwnerInfoPicnameById">
+	  	update tb_homm_ownerinfo set 
+	  	owner_picname = NULL
+	  	where owner_id = #{id}
+  </update> 
+  
+  <!--增加新业主 -->
+  <insert id="addNewOwnerInfo" parameterType="OwnerInfo" >
+  	INSERT  INTO tb_homm_ownerinfo(`ldc_id`,`owner_type`,`owner_code`,`owner_name`,`owner_gender`,`owner_birthday`,`owner_race`,`owner_education`,`owner_country`,
+  	`owner_hometown`,`owner_cert_type`,`owner_cert_no`,`owner_work`,`owner_work_position`,`owner_mobile`,`owner_zipcode`,`owner_add`,`owner_urgentcontact`,
+  	`owner_urgentcontact_phone`,`owner_urgentcontact_add`,`owner_bank`,`owner_bankaccount`,`owner_police`,`owner_status`,`owner_remark`,`owner_picname`) 
+  	VALUES (#{ldcId},#{ownerType},#{ownerCode},#{ownerName},#{ownerGender},#{ownerBirthday},#{ownerRace},#{ownerEducation},#{ownerCountry},#{ownerHometown},
+  	#{ownerCertType},#{ownerCertNo},#{ownerWork},#{ownerWorkPosition},#{ownerMobile},#{ownerZipcode},#{ownerAdd},#{ownerUrgentcontact},#{ownerUrgentcontactPhone},
+  	#{ownerUrgentcontactAdd},#{ownerBank},#{ownerBankaccount},#{ownerPolice},#{ownerStatus},#{ownerRemark},#{ownerPicname})
+  </insert>
+</mapper>
+
+

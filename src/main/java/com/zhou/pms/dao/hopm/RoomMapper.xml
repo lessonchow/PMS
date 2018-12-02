@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhou.pms.dao.hopm.RoomMapper">
+
+	<resultMap type="Room" id="RoomMap">
+	 	<id property="roomId" column="room_id"/>
+	 	<result property="roomName" column="room_name"/>
+	 	
+	 	<association property="bldUnit" javaType="BldUnit" resultMap="com.zhou.pms.dao.hopm.BldUnitMapper.BldUnitMap"/>
+	 	<association property="building" javaType="Building" resultMap="com.zhou.pms.dao.hopm.BuildingMapper.BuildingMap"/>
+	 	<association property="construction" javaType="Construction" resultMap="com.zhou.pms.dao.hopm.ConstructionMapper.ConstructionMap"/>
+	 	<association property="company" javaType="Company" resultMap="com.zhou.pms.dao.hopm.CompanyMapper.CompanyMap"/>
+  	</resultMap>
+  	<resultMap type="Room" id="RoomResult">
+	 	<id property="roomId" column="room_id"/>
+	 	<result property="roomName" column="room_name"/>
+  	</resultMap>
+	
+	<!-- 通过用户输入的房间号获取业主的id -->
+  <select id="getOwnerIdbyRoomId" resultType="int">
+  	select owner_id from 
+  	tb_homm_estates e, tb_room r 
+  	where e.room_id = r.room_id and r.room_id = #{id}
+  </select>
+  
+  <!-- 通过联表查询全部房产详细信息和经营公司信息 -->
+  <select id="getAllBuildingInfoByRoomId" resultMap="RoomMap">
+  	SELECT r.`room_id`, r.`room_name`,bu.`unit_id`,bu.`unit_name`,b.`bld_id`,b.`bld_name`,con.`cons_id`,con.`cons_name`,com.`ldc_id`,com.`ldc_name`
+	FROM tb_room r, tb_building_unit bu, tb_building b, tb_construction con, tb_company com
+	WHERE r.`unit_id` = bu.`unit_id` AND bu.`bld_id` = b.`bld_id` AND b.`cons_id` = con.`cons_id` AND con.`ldc_id` = com.`ldc_id`
+	AND r.`room_id` = #{roomId};
+  </select>
+  
+  <!-- 通过单元 id查所有房间信息-->
+  <select id="getAllRoomByUnitId" resultMap="RoomResult">
+  	select * from tb_room
+	where unit_id = #{unitId} and est_id is null;
+  </select>
+  
+  <!-- 为添加房产登记信息和删除房产登记信息而更改tb_room表的est_id和mi_id字段。这个方法里mi_id永远是null，所以只有在删除房产时才有作用 -->
+  <update id="updateOwnerIdMiIdInRoom" >
+  	update tb_room set est_id = #{estId}, mi_id = #{mi.miId} where room_id = #{roomId}
+  </update>
+  
+   <!-- 为删除房产登记信息而更改tb_room表的mi_id字段 -->
+  <!-- <update id="updateMiIdInRoom" >
+  	update tb_room set  where room_id = #{roomId}
+  </update> -->
+  
+</mapper>
+
+

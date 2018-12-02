@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhou.pms.dao.homm.MoveInMapper">
+
+	<!-- 业主名下房产的resultMap -->
+	<resultMap type="MoveIn" id="MoveInMap">
+	 	<id property="miId" column="mi_id"/>
+	 	<result property="miDate" column="mi_date"/>
+	 	<result property="miStatus" column="mi_status"/>
+	 	<result property="estId" column="est_id"/>
+	 	<result property="roomId" column="room_id"/>
+  	</resultMap>
+
+	
+  	
+  <!-- 查找某个房产信息下的入住信息
+   -->
+	<select id="getMoveInByEstId" resultMap="MoveInMap">
+	 	select * from tb_homm_movein 
+	 	where est_id = #{estId}
+	</select>
+  
+  <!-- 根据房产登记信息ID删除入住信息 -->
+  <delete id="deleteMoveInByEstId">
+  	delete from tb_homm_movein
+  	where est_id = #{estId}
+  </delete>
+  
+</mapper>
+
+

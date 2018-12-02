@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhou.pms.dao.homm.EstatesMapper">
+
+	<!-- 业主名下房产的resultMap -->
+	<resultMap type="Estates" id="EstatesMap">
+	 	<id property="estId" column="est_id"/>
+	 	<result property="estCid" column="est_cid"/>
+	 	<result property="estBid" column="est_bid"/>
+	 	<result property="estIspay" column="est_ispay"/>
+	 	<result property="estRepairdeposit" column="est_repairdeposit"/>
+	 	<result property="estDecodate" column="est_decodate"/>
+	 	<result property="estOrder" column="est_order"/>
+	 	<result property="estRemark" column="est_remark"/>
+	 	<result property="ownerId" column="owner_id"/>
+	 	<result property="roomId" column="room_id"/>
+	 	<!-- <association property="mi" javaType="MoveIn">
+	 		<id property="miId" column="mi_id"/>
+		 	<result property="miDate" column="mi_date"/>
+		 	<result property="miStatus" column="mi_status"/>
+		 	<result property="estId" column="est_id"/>
+	 	</association> -->
+	 	
+	 	<!-- <association property="ownerInfo" javaType="OwnerInfo" resultMap="OwenerInfoMap"/>
+	 	<association property="room" javaType="com.bdqn.pms.po.hopm.Room" resultMap=""/> -->
+  	</resultMap>
+
+	<!-- 新增某个业主的房产信息 -->
+ 	<insert id="addNewEstate" parameterType="Estates" useGeneratedKeys="true" keyProperty="estId">
+		INSERT  INTO `tb_homm_estates`(`est_cid`,`est_bid`,`est_ispay`,`est_repairdeposit`,`est_decodate`,`est_order`,`est_remark`,`owner_id`,`room_id`) 
+		VALUES (#{estCid},#{estBid},#{estIspay},#{estRepairdeposit},#{estDecodate},#{estOrder},#{estRemark},#{ownerId},#{roomId})
+  	</insert>
+  	
+  <!-- 查找某个业主下的所有房产信息或单条房产信息（包含房间入住信息）
+  		当estId为空时查业主下的所有房产信息，当estId不为空时查单条房产信息
+   -->
+	<select id="getEstates" resultMap="EstatesMap">
+	 	select e.*
+	 	<!-- <if test="estId == null or estId ==''">
+	 		, m.* 
+	 	</if> -->
+	 	from tb_homm_estates e
+	 	<!-- <if test="estId == null or estId ==''">
+	 		, tb_homm_movein m
+	 	</if> -->
+	 	where owner_id = #{ownerId}
+	 	<!-- <if test="estId == null or estId ==''">
+	 		and e.est_id = m.est_id
+	 	</if> -->
+	 	<if test="estId != null and estId !=''">
+	 		and est_id = #{estId} 
+	 	</if>
+	 	order by est_order asc
+	</select>
+  
+  <!-- 更新相应房产的信息-->
+  <update id="updateEstateById" parameterType="Estates">
+	  	update tb_homm_estates set est_cid=#{estCid},est_bid=#{estBid},est_ispay=#{estIspay},est_repairdeposit=#{estRepairdeposit},est_decodate=#{estDecodate},
+	  	est_order=#{estOrder},est_remark=#{estRemark},owner_id=#{ownerId},room_id=#{roomId} where est_id = #{estId};
+  </update>  
+  
+  <!-- 根据id删除具体的房产信息 -->
+  <delete id="deleteEstateById">
+  		delete from tb_homm_estates 
+  		where est_id=#{id}
+  </delete>
+  
+  <!-- 获取某个owner_id下的房产数量 -->
+  <select id="getEstCount" resultType="int">
+  	select count(1) from 
+	tb_homm_estates
+  	where owner_id = #{id}
+  </select>
+  
+</mapper>
+
+

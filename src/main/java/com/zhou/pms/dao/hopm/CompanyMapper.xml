@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhou.pms.dao.hopm.CompanyMapper">
+
+	<resultMap type="Company" id="CompanyMap">
+		<id property="ldcId" column="ldc_id"/>
+		<result property="ldcCode" column="ldc_code"/>
+		<result property="ldcName" column="ldc_name"/>
+		<!-- <result property="ldcPid" column="ldc_pid"/> -->
+	</resultMap>
+	
+	 <!-- 获取全部房地产经营公司信息 -->
+  <select id="getAllCompany" resultMap="CompanyMap" >
+  	SELECT * FROM tb_company
+  </select>
+  
+</mapper>
+
+

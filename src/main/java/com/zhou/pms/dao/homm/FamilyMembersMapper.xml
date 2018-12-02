@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhou.pms.dao.homm.FamilyMembersMapper">
+
+	<!-- 业主家庭成员的resultMap -->
+	<resultMap type="FamilyMembers" id="FamilyMembersMap">
+	 	<id property="fmId" column="fm_id"/>
+	 	<result property="fmName" column="fm_name"/>
+	 	<result property="fmPhone" column="fm_phone"/>
+	 	<result property="fmGender" column="fm_gender"/>
+	 	<result property="fmBirthday" column="fm_birthday"/>
+	 	<result property="fmCertType" column="fm_cert_type"/>
+	 	<result property="fmCertNo" column="fm_cert_no"/>
+	 	<result property="fmRelationship" column="fm_relationship"/>
+	 	<result property="fmEducation" column="fm_education"/>
+	 	<result property="fmWork" column="fm_work"/>
+	 	<result property="fmRemark" column="fm_remark"/>
+	 	<result property="fmPicname" column="fm_picname"/>
+	 	<result property="ownerId" column="owner_id"/>
+	 	
+	 	<!-- <result property="ownerName" column="owner_name"/> -->
+	 	
+	 	<!-- <association property="ownerInfo" javaType="OwnerInfo" resultMap="OwenerInfoMap"/> -->
+  	</resultMap>
+
+	<!-- 新增某个业主的家庭成员 -->
+ 	<insert id="addNewFamilyMember" parameterType="FamilyMembers" >
+		INSERT  INTO `tb_homm_familymembers`(`fm_name`,`fm_phone`,`fm_gender`,`fm_birthday`,`fm_cert_type`,
+									`fm_cert_no`,`fm_relationship`,`fm_education`,`fm_work`,`fm_remark`,`fm_picname`,`owner_id`) 
+		VALUES (#{fmName},#{fmPhone},#{fmGender},#{fmBirthday},#{fmCertType},
+				#{fmCertNo},#{fmRelationship},#{fmEducation},#{fmWork},#{fmRemark},#{fmPicname},#{ownerId})
+  	</insert>
+  	
+  <!-- 查找某个业主下的所有家庭成员或单个家庭成员 -->
+	<select id="getFamilyMembers" resultMap="FamilyMembersMap">
+	 	select * from 
+	 	tb_homm_familymembers
+	 	where owner_id = #{ownerId}
+	 	<if test="fmId != null and fmId !=''">
+	 		and fm_id = #{fmId} 
+	 	</if>
+	</select>
+  
+  
+  <!-- 更新相应家庭成员的信息-->
+  <update id="updateFamilyMemberById" parameterType="FamilyMembers">
+	  	update tb_homm_familymembers set fm_name=#{fmName},fm_phone=#{fmPhone},fm_gender=#{fmGender},fm_birthday=#{fmBirthday},fm_cert_type=#{fmCertType},
+	  	fm_cert_no=#{fmCertNo},fm_relationship=#{fmRelationship},fm_education=#{fmEducation},fm_work=#{fmWork},fm_remark=#{fmRemark},fm_picname=#{fmPicname},
+	  	owner_id=#{ownerId} where fm_id=#{fmId};
+  </update>  
+  
+  <!-- 根据id删除具体的家庭成员信息 -->
+  <delete id="deleteFamilyMemberById">
+  		delete from tb_homm_familymembers 
+  		where fm_id=#{id}
+  </delete>
+  
+  <!-- 清除某个家庭成员的照片 -->
+  <update id="clearFmPicnameById">
+	  	update tb_homm_familymembers set 
+	  	fm_picname = NULL
+	  	where fm_id=#{id}
+  </update> 
+  
+    <!-- 获取某个owner_id下的家庭成员数量 -->
+  <select id="getFmCount" resultType="int">
+  	select count(1) from 
+	tb_homm_familymembers
+  	where owner_id = #{id}
+  </select>
+  
+</mapper>
+
+
